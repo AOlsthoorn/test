@@ -1,11 +1,13 @@
 #!/usr/bin/python
+# Versie: 2.2 
+# Datum: 19-2-2017
 
 from collections import Counter
 import os
 
 """
 De functie opent de opgegeven filenaam, wat als een parameter meegegeven wordt,
-en keert alle zinnen als een lijst terug. Ze zijn gesprlitst op een enter.
+en keert alle zinnen als een lijst terug. Ze zijn gesplitst op een enter.
 De functie gebruikt de volgende parameters:
     * of_file   bestand van interesse dat geopend moet worden. 
 """
@@ -15,7 +17,7 @@ def OpenFile(of_file):
 
 """
 De functie kijkt of de opgegeven waarde (if_kans) in de lijst (if_lijst)
-voorkomt. Als datwaar is dat wordt de waarde "true teruggegeven, zoniet dat
+voorkomt. Als dat waar is dat wordt de waarde "true" teruggegeven, zoniet dan
 wordt de waarde "False" teruggegeven.
 De functie gebruikt de volgende parameters (op volgorde):
     * if_kans   mogelijke combinatie van tekens.
@@ -30,7 +32,7 @@ def IndexFind(if_kans, if_lijst):
 
 """
 De functie doorloopt de lijst, twogdeellijst (dat teruggeleverd wordt door
-de functie OpenFile) en zorgt ervoor dat elke mogelijke combinatie maar 1 maal
+de functie OpenFile), en zorgt ervoor dat elke mogelijke combinatie maar 1 maal
 voorkomt. Dit is nodig omdat er soms bij de blastresultaten meerdere malen voor
 kan komen dat een bepaalde beste hit voor kan komen. Alle mogelijke combinaties
 worden dan als een lijst teruggekeerd.
@@ -44,7 +46,7 @@ br_pos2 de 0 hebben!
 De functie keert het volgende terug:
     * singles.keys()    lijst van alle mogelijke combinaties   
 """
-def BlastResults(br_naam1, br_naam2, br_pos1, tbr_pos2):
+def BlastResults(br_naam1, br_naam2, br_pos1, br_pos2):
     singles = {}
     twogdeellijst = OpenFile(br_naam1+br_naam2)
     for zin in twogdeellijst:             
@@ -53,21 +55,19 @@ def BlastResults(br_naam1, br_naam2, br_pos1, tbr_pos2):
 
 """
 De functie zorgt ervoor dat in de file genaamd Twogs nieuwe twogcombinaties
-bijgevoegd kunnen worden. De combinatie worden erkregen door een in een lege
-lijst de mogelijke combinaties toe te voegen. De combinaties worden verkregen
-door de functie Blastresult. als de lijst gevuld wordt, zullen het aantal
-mogelijke combinaties geteld worden. Als de combinatie >= 2 dan wordt de
-combinatie in de twoglijst gevuld.
-Hierna wordt de file afgesloten.
+bijgevoegd kunnen worden. De combinaties worden verkregen door de functie 
+BlastResults. Als de lijst gevuld wordt, zullen het aantal mogelijke combinaties
+geteld worden. Als de combinatie >= 2 dan wordt de combinatie in de twoglijst 
+gevuld. Hierna wordt de file afgesloten.
 De functie gebruikt de volgende parameters (op volgorde):
     * snt_naam1     organisme naam van het eerste deel
     * snt_naam1     organisme naam van het tweede deel
 """
-def SchrijfNaarTwog(snt_naam1, snc_naam2):
+def SchrijfNaarTwog(snt_naam1, snt_naam2):
     snt_twogfile = open("Twogs", "a")
     snt_lijst = []
-    snt_lijst.extend(BlastResults(snt_naam1, snc_naam2, 0, 1))
-    snt_lijst.extend(BlastResults(snc_naam2, snt_naam1, 1, 0))
+    snt_lijst.extend(BlastResults(snt_naam1, snt_naam2, 0, 1))
+    snt_lijst.extend(BlastResults(snt_naam2, snt_naam1, 1, 0))
     tellijst = Counter(snt_lijst)
     for keys in tellijst:
         if tellijst[keys] >= 2:
@@ -76,7 +76,7 @@ def SchrijfNaarTwog(snt_naam1, snc_naam2):
 
 """
 De functie zorgt ervoor dat in de file genaamd cogs.txt nieuwe eiwitten met hun
-cognummerscogs toegevoegd kunnen worden
+cognummer toegevoegd kunnen worden
 Hierna wordt de file afgesloten.
 De functie gebruikt de volgende parameters:
     * vtav_lijst    Lijst van alle mogelijke eiwitten en hun cognummers.
@@ -88,7 +88,7 @@ def VoegToeAanCog(vtav_lijst):
     cogfile.close()
 
 """
-de functie schrijft naar de file Twogs. Hij nneemt alle posities in de lijst
+De functie schrijft naar de file Twogs. Hij neemt alle posities in de lijst
 en schrijft ze naar de file. Daarna wordt de file afgesloten.
 De functie gebruikt de volgende parameters :
     * ntf_twogs   lijst van twogs
@@ -129,9 +129,9 @@ def ZoekInLijst(zil_waarde, zil_lijst, zil_switch):
     
 """
 De functie update een bestaande cog. Als er een eiwit gevonden wordt dat bij
-een bepaalde cogs hoort, wordt in de twoglijst naar alle mogelijke combinaties
-gezocht en worden ze (alle combinaties die bij de desbetreffende cog hoort)
-verwijderd uit de twoglijst. Tevens wordt dan ook de eiwit uit de protlijst
+een bepaalde cog hoort, wordt in de twoglijst naar alle mogelijke combinaties
+gezocht en worden ze (alle combinaties die bij de desbetreffende cog horen)
+verwijderd uit de twoglijst. Tevens wordt dan ook het eiwit uit de protlijst
 verwijderd. 
 De functie heeft 3 verschillende parameters nodig (op volgorde):
     * cogs      coglijst
@@ -148,9 +148,8 @@ def CogUpdate(cogs, twogs, prots):
             cu_lijstje.extend( ZoekInLijst(y, twogs, 2))
             nogteverwijderen.extend(ZoekInLijst(y, twogs, 0))
         if len(Counter(cu_lijstje)) != 0 :
-            max_prot = KeyWithMaxVal(dict(Counter(cu_lijstje)))
+            max_prot = KeyWithMaxVal(dict(Counter(cu_lijstje)))	    
             cu_in_lijst_toevoegen.append("%s\t%s\n"%(x, max_prot))
-            prots.remove(max_prot)
             nogteverwijderen.extend(ZoekInLijst(max_prot, twogs, 0))
             newlijst =  list(set(nogteverwijderen))
             TwogRemove(newlijst, twogs)
@@ -159,14 +158,14 @@ def CogUpdate(cogs, twogs, prots):
 """
 De functie doorzoekt de twoglijst en vindt alle mogelijke combinaties van de
 eiwitten in de kleine lijst (prot_in_twogs). De combinaties worden allemaal
-opgeslagen in de lokale variabel genaamd:
+opgeslagen in de lokale variabele genaamd:
     vt_lijst
 De functie heeft 3 parameters:
     * prot              het eiwit van interresse
     * twogs             de twoglijst
     * prot_in_twogs     de lijst van de nodige eiwitten
 De functie keert het volgende terug:
-    * vt_lijst      lijst van interresse 
+    * vt_lijst      	lijst van interresse 
 """
 def VerbrogenTwogs(prot, twogs, prot_in_twogs):
     vt_lijst = []
@@ -185,11 +184,11 @@ het hoogste bekende cognummer opgehaald wordt door de functie
 De functie doorloopt de eiwttenlijst en zoekt in de twoglijst naar alle
 mogelijke combinatie behorend bij het eiwit. Waarna de functie "VerbrogenTwogs"
 aangeroepen wordt. het resultaat wordt in de variabele posible_found_twogs
-gezet. als deze variabele niet leeg is dan worden alle eiwitten in een nieuwe
+gezet. Als deze variabele niet leeg is dan worden alle eiwitten in een nieuwe
 variabele lijst (newcog) gestopt. Hier wordt per eiwit in de lijst dezelfde
 cognummer toegekend. Alle mogelijke combinatie van twogs dat nog aanwezig is
 in de twoglijst wordt ook meteen verwijderd.
-Als laatste wordt de lijst met de nieuwe cognummer aan de cogfile toegevoegd.
+Als laatste wordt de lijst met het nieuwe cognummer aan de cogfile toegevoegd.
 Dit gebeurt door middel van de functie "VoegToeAanCog".
 De functie heeft 3 verschillende parameters nodig (op volgorde):
     * ncf_cogs      coglijst
@@ -214,7 +213,7 @@ def NewCogFind(ncf_cogs, ncf_twogs, ncf_prots):
 
  
 """
-de functie keert het hoogste cognummer. Bestaat het nummer niet dan zal de
+De functie keert het hoogste cognummer terug. Bestaat het nummer niet dan zal de
 waarde 0 teruggegeven worden.
 De functie gebruikt de volgende parameters :
     * vhcn_lijst   lijst waar er in gezocht moet worden.
@@ -223,7 +222,7 @@ De functie keert een getal terug
 """
 def VindHoogsteCogNummer(vhcn_lijst):
     try:
-        return int(max(vhcn_lijst)[0])        
+        return int(max(vhcn_lijst))        
     except IOError:
         return 0
     except IndexError:
@@ -232,11 +231,11 @@ def VindHoogsteCogNummer(vhcn_lijst):
         return 0
 
 """
-de functie keert de key van een dictionary waarbij de waarde de maximale waarde
+De functie keert de key van een dictionary waarbij de waarde de maximale waarde
 heeft.
 De functie gebruikt de volgende parameters :
-    * kwmv_dict   dictionairy waar erin gezocht wordt
-De functie keert key terug waarbij de value een hoogste maximale waarde heeft
+    * kwmv_dict   dictionairy waar in gezocht wordt
+De functie keert de key terug waarbij de value de hoogste maximale waarde heeft
 
 """    
 def KeyWithMaxVal(kwmv_dict):
@@ -251,14 +250,14 @@ waar een ">" in voorkomt gepakt.
     de twoglijst
     de coglijst
 De functie gebruikt de volgende parameters :
-    * onf_org   organismenaam
-de functie keert (op volgorde) de volgende 3 lijsten terug:
-    * protlijst
-    * twoglijst
-    * coglijst
+    * onf_org       organismenaam
+De functie keert (op volgorde) de volgende 3 lijsten terug:
+    * protlijst     lijst met eiwitten
+    * twoglijst	    lijste met de twogs
+    * coglijst      lijst met al bekende cogs
 """
 def OpenNeededFiles(onf_org):
-    protlijst = [y[1:-1] for y in OpenFile("%s.fa"%(onf_org)) if ">" in y]
+    protlijst = [y[1:-1] for y in OpenFile("%s.fasta"%(onf_org)) if ">" in y]
     twoglijst = [y[:-1] for y in OpenFile("Twogs")]
     coglijst = [y[:-1] for y in OpenFile("cogs.txt")]
     return protlijst, twoglijst, coglijst
@@ -266,7 +265,7 @@ def OpenNeededFiles(onf_org):
 """
 De functie doorzoekt in de cogs en in de twogs of de bestaande cogs geupdate
 moeten worden of dat er nieuwe cogs moeten onstaan. tevens zorgt het ervoor
-dat de twogfile geheel vernieuwe wordt.
+dat de twogfile geheel vernieuwd wordt.
 De functie gebruikt de volgende parameters (op volgorde):
     * sfc_cogs      coglijst
     * sfc_twogs     twoglijst
@@ -285,7 +284,7 @@ Let op: bestaande files zoals de twogs en de cogs.txt zullen verwijderd worden!
 def Voorbeeld():
     os.system("rm Twogs cogs.txt")
     os.system("touch Twogs cogs.txt")
-    orgslijst = [y[:-1] for y in OpenFile("orglijst") if "\n" in y]
+    orgslijst = [y[:-1] for y in OpenFile("orglijst.txt") if "\n" in y]
     for x in range(len(orgslijst)):
         org1 = orgslijst[x]
         for y in range(len(orgslijst)):
